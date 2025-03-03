@@ -8,19 +8,32 @@ const Form = () => {
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (!formData.name || !formData.email) {
-            toast.error("Form submission unsuccessful. Please fill out all fields.");
+            toast.error("Please fill out all fields.");
             return;
         }
-        
-        console.log("form submitted");
-        toast.success("Form submitted successfully. YIPEE!");   
+
+        try {
+            const response = await fetch("http://localhost:5000/submit-form", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Form submission failed");
+
+            toast.success("Form submitted successfully!");
+            setFormData({ name: "", email: "" }); // Reset form after submission
+        } catch (error: any) {
+            toast.error(error.message);
+        }
     };
 
     return (
@@ -30,7 +43,7 @@ const Form = () => {
                 <input
                     type="text"
                     name="name"
-                    placeholder="input name here"
+                    placeholder="Enter your name"
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
@@ -38,7 +51,7 @@ const Form = () => {
                 <input
                     type="email"
                     name="email"
-                    placeholder="input email here"
+                    placeholder="Enter your email"
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
@@ -48,7 +61,7 @@ const Form = () => {
                 </button>
             </form>
         </div>
-    )
-}
+    );
+};
 
 export default Form;
