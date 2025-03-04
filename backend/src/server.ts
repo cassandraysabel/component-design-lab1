@@ -1,46 +1,22 @@
-import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
+import getRoutes from "./routes/getRoutes";
+dotenv.config();
 
 const app = express();
-app.use(express.json()); 
 
+const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: ["http://localhost:3000", "http://localhost:5173"] }));
-
-
-const supabase = createClient(
-    process.env.SUPABASE_URL as string,
-    process.env.SUPABASE_KEY as string
-);
+app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("✅ Supabase Backend with TSX is running...");
+  res.send("root route");
 });
 
+app.use("/api/get", getRoutes);
 
-app.post("/submit-form", async (req, res) => {
-    const { name, email } = req.body;
-
-   
-    if (!name || !email) {
-        return res.status(400).json({ error: "All fields are required." });
-    }
-
-    try {
-        
-        const { data, error } = await supabase
-            .from("users") 
-            .insert([{ name, email }]);
-
-        if (error) throw error;
-
-        res.status(201).json({ message: "✅ Form submitted successfully", data });
-    } catch (error: any) {
-        res.status(500).json({ error: error.message });
-    }
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
