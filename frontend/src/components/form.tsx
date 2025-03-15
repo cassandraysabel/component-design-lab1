@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Form = () => {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         name: "",
         email: ""
@@ -30,7 +33,12 @@ const Form = () => {
             if (!response.ok) throw new Error(data.error || "Form submission failed");
 
             toast.success("Form submitted successfully!");
-            setFormData({ name: "", email: "" }); // Reset form after submission
+
+            setFormData({ name: "", email: "" });
+
+            setTimeout(() => {
+                navigate("/");
+            }, 1000);
         } catch (error: any) {
             toast.error(error.message);
         }
