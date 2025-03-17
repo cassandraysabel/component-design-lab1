@@ -2,18 +2,19 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { createClient } from "@supabase/supabase-js";
+import intervieweeRoutes from "./routes/intervieweeRoutes";
 
 const app = express();
 app.use(express.json());
 app.use(cors({ origin: ["http://localhost:3000", "http://localhost:5173"] }));
 
-// Initialize Supabase Client
+
 const supabase = createClient(
     process.env.SUPABASE_URL as string,
     process.env.SUPABASE_KEY as string
 );
 
-// Static Employee Data
+
 const employees = [
   { id: 1, name: "Alhena Siaotong", role: "Front-End Developer", salary: 45000 },
   { id: 2, name: "Cassandra Gedalanga", role: "Project Manager", salary: 75000 },
@@ -22,12 +23,11 @@ const employees = [
   { id: 5, name: "Krystal Tuden", role: "Back-End Developer", salary: 52000 }
 ];
 
-// Default Route
+
 app.get("/", (req, res) => {
     res.send("✅ Supabase Backend with TSX is running...");
 });
 
-// Handle Form Submission
 app.post("/submit-form", async (req, res) => {
     const { name, email } = req.body;
 
@@ -48,10 +48,11 @@ app.post("/submit-form", async (req, res) => {
     }
 });
 
-// ✅ Fetch Employees 
 app.get("/api/employees", (req, res) => {
     res.json(employees);
 });
+
+app.use("/api/interviewees", intervieweeRoutes);
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
