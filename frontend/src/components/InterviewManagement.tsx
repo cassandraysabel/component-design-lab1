@@ -3,23 +3,23 @@ import axios from "axios";
 
 interface Interviewee {
     id?: number;
-    firstName: string;
-    lastName: string;
-    groupName: string;
+    firstname: string;
+    lastname: string;
+    groupname: string;
     role: string;
-    expectedSalary: number;
-    dateOfDefense: string;
+    expectedsalary: number;
+    dateofdefense: string;
 }
 
 const InterviewManagement = () => {
     const [interviewees, setInterviewees] = useState<Interviewee[]>([]);
     const [form, setForm] = useState<Interviewee>({
-        firstName: "",
-        lastName: "",
-        groupName: "",
+        firstname: "",
+        lastname: "",
+        groupname: "",
         role: "",
-        expectedSalary: 0,
-        dateOfDefense: "",
+        expectedsalary: 0,
+        dateofdefense: "",
     });
 
     useEffect(() => {
@@ -44,12 +44,12 @@ const InterviewManagement = () => {
             if (res.status === 201 || res.status === 200) {
                 fetchInterviewees(); ``
                 setForm({
-                    firstName: "",
-                    lastName: "",
-                    groupName: "",
+                    firstname: "",
+                    lastname: "",
+                    groupname: "",
                     role: "",
-                    expectedSalary: 0,
-                    dateOfDefense: "",
+                    expectedsalary: 0,
+                    dateofdefense: "",
                 });
             } else {
                 console.error("Failed to add student:", res.data);
@@ -69,12 +69,12 @@ const InterviewManagement = () => {
         <div className="p-5 max-w-2xl mx-auto">
             <h1 className="text-2xl font-bold mb-4">Student Management</h1>
             <form onSubmit={handleSubmit} className="mb-4">
-                <input type="text" name="firstName" placeholder="First Name" value={form.firstName} onChange={handleChange} className="border p-2 m-1 w-full" required />
-                <input type="text" name="lastName" placeholder="Last Name" value={form.lastName} onChange={handleChange} className="border p-2 m-1 w-full" required />
-                <input type="text" name="groupName" placeholder="Group Name" value={form.groupName} onChange={handleChange} className="border p-2 m-1 w-full" required />
+                <input type="text" name="firstname" placeholder="First Name" value={form.firstname} onChange={handleChange} className="border p-2 m-1 w-full" required />
+                <input type="text" name="lastname" placeholder="Last Name" value={form.lastname} onChange={handleChange} className="border p-2 m-1 w-full" required />
+                <input type="text" name="groupname" placeholder="Group Name" value={form.groupname} onChange={handleChange} className="border p-2 m-1 w-full" required />
                 <input type="text" name="role" placeholder="Role" value={form.role} onChange={handleChange} className="border p-2 m-1 w-full" required />
-                <input type="number" name="expectedSalary" placeholder="Expected Salary" value={form.expectedSalary} onChange={handleChange} className="border p-2 m-1 w-full" required />
-                <input type="date" name="dateOfDefense" value={form.dateOfDefense} onChange={handleChange} className="border p-2 m-1 w-full" required />
+                <input type="number" name="expectedaslary" placeholder="Expected Salary" value={form.expectedsalary} onChange={handleChange} className="border p-2 m-1 w-full" required />
+                <input type="date" name="dateofdefense" value={form.dateofdefense} onChange={handleChange} className="border p-2 m-1 w-full" required />
                 <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Add Student</button>
             </form>
 
@@ -92,11 +92,11 @@ const InterviewManagement = () => {
                 <tbody>
                     {interviewees.map((interviewee) => (
                         <tr key={interviewee.id}>
-                            <td className="border p-2">{interviewee.firstName} {interviewee.lastName}</td>
-                            <td className="border p-2">{interviewee.groupName}</td>
+                            <td className="border p-2">{interviewee.firstname} {interviewee.lastname}</td>
+                            <td className="border p-2">{interviewee.groupname}</td>
                             <td className="border p-2">{interviewee.role}</td>
-                            <td className="border p-2">${interviewee.expectedSalary}</td>
-                            <td className="border p-2">{interviewee.dateOfDefense}</td>
+                            <td className="border p-2">${interviewee.expectedsalary}</td>
+                            <td className="border p-2">{interviewee.dateofdefense}</td>
                             <td className="border p-2">
                                 <button onClick={() => handleDelete(interviewee.id!)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
                                 <button className="bg-blue-500 text-white px-2 py-1 rounded">Edit</button>

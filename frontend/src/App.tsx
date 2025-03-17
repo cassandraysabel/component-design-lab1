@@ -2,7 +2,7 @@ import { Slide, ToastContainer } from "react-toastify";
 import { Routes, Route, Link } from "react-router-dom";
 import Form from "./components/form";
 import Employees from "./Employees"
-import Interviewees from "./Students";
+import Interviewees from "./Interviewee";
 
 const App = () => {
   return (

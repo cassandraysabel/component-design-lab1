@@ -1,7 +1,11 @@
 import {Request, Response} from "express";
-import { supabase } from "../database/supabase";
+import { createClient } from "@supabase/supabase-js";
 
-const app = require("express")();
+const supabase = createClient(
+    process.env.SUPABASE_URL as string,
+    process.env.SUPABASE_KEY as string
+);
+
 export const getInterviewee = async (req: Request, res: Response) => {
     const { data, error } = await supabase.from("interviewees").select();
     if (error) 

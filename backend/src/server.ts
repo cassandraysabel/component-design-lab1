@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { createClient } from "@supabase/supabase-js";
-import intervieweeRoutes from "./routes/intervieweeRoutes";
+import IntervieweeRouter from "./routes/intervieweeRoutes";
 
 const app = express();
 app.use(express.json());
@@ -52,7 +52,8 @@ app.get("/api/employees", (req, res) => {
     res.json(employees);
 });
 
-app.use("/api/interviewees", intervieweeRoutes);
+console.log("intervieweeRoutes is mounted at /api/interviewees");
+app.use("/api/interviewees", IntervieweeRouter);
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
