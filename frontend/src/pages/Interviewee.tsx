@@ -1,4 +1,4 @@
-import InterviewManagement from './components/InterviewManagement';
+import InterviewManagement from '../components/InterviewManagement';
 
 const Interviewees = () => {
   return (

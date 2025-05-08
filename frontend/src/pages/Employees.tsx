@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import EmployeeTable from "./components/EmployeeTable";
+import EmployeeTable from "../components/EmployeeTable";
 
 interface Employee {
   id: number;
