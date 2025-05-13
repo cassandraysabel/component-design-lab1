@@ -1,4 +1,4 @@
-# CASSIE'S COMPONENTS 🌷 #
+# 🌷 CASSIE'S COMPONENTS 🌷 #
 
 ## FRONTEND ##
 **on terminal**
