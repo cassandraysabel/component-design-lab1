@@ -3,10 +3,12 @@ import express from "express";
 import cors from "cors";
 import { createClient } from "@supabase/supabase-js";
 import IntervieweeRouter from "./routes/intervieweeRoutes";
+import taskRouter from "./routes/taskRoutes";
+
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: ["http://localhost:3000", "http://localhost:5173"] }));
+app.use(cors({ origin: ["http://localhost:5173"] }));
 
 
 const supabase = createClient(
@@ -54,6 +56,9 @@ app.get("/api/employees", (req, res) => {
 
 console.log("intervieweeRoutes is mounted at /api/interviewees");
 app.use("/api/interviewees", IntervieweeRouter);
+
+
+app.use("/api/tasks", taskRouter);
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
