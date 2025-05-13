@@ -5,7 +5,7 @@ const supabase = createClient(
     process.env.SUPABASE_URL as string,
     process.env.SUPABASE_KEY as string
 );
-// Define types
+
 interface ChecklistItem {
   id: string
   text: string
@@ -23,18 +23,16 @@ interface Task {
 }
 
 export const taskController = {
-  // Get all tasks
+
   getAllTasks: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { data, error } = await supabase.from("tasks").select("*")
 
       if (error) throw error
 
-      // Process tasks to handle checklist items
       const processedTasks = await Promise.all(
         data.map(async (task) => {
           if (task.type === "checklist") {
-            // Fetch checklist items for this task
             const { data: items, error: itemsError } = await supabase
               .from("checklist_items")
               .select("*")
@@ -57,7 +55,6 @@ export const taskController = {
     }
   },
 
-  // Get task by ID
   getTaskById: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
@@ -71,7 +68,6 @@ export const taskController = {
         throw error
       }
 
-      // If it's a checklist task, fetch the items
       if (data.type === "checklist") {
         const { data: items, error: itemsError } = await supabase.from("checklist_items").select("*").eq("task_id", id)
 
@@ -86,22 +82,18 @@ export const taskController = {
     }
   },
 
-  // Create a new task
   createTask: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { title, type, completed, due_date, items } = req.body
 
-      // Validate required fields
       if (!title || !type) {
         return res.status(400).json({ error: "Title and type are required" })
       }
 
-      // Validate task type
       if (!["basic", "timed", "checklist"].includes(type)) {
         return res.status(400).json({ error: "Invalid task type" })
       }
 
-      // Create the task
       const { data, error } = await supabase
         .from("tasks")
         .insert([
@@ -117,7 +109,6 @@ export const taskController = {
 
       if (error) throw error
 
-      // If it's a checklist task, create the items
       if (type === "checklist" && items && items.length > 0) {
         const itemsToInsert = items.map((item: any) => ({
           task_id: data.id,
@@ -141,13 +132,11 @@ export const taskController = {
     }
   },
 
-  // Update an existing task
   updateTask: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
       const { title, type, completed, due_date, items } = req.body
 
-      // Check if task exists
       const { data: existingTask, error: fetchError } = await supabase.from("tasks").select("*").eq("id", id).single()
 
       if (fetchError) {
@@ -157,7 +146,6 @@ export const taskController = {
         throw fetchError
       }
 
-      // Update the task
       const { data, error } = await supabase
         .from("tasks")
         .update({
@@ -172,14 +160,11 @@ export const taskController = {
 
       if (error) throw error
 
-      // If it's a checklist task and items are provided, update the items
       if ((type === "checklist" || existingTask.type === "checklist") && items) {
-        // First, delete existing items
         const { error: deleteError } = await supabase.from("checklist_items").delete().eq("task_id", id)
 
         if (deleteError) throw deleteError
 
-        // Then, insert new items
         if (items.length > 0) {
           const itemsToInsert = items.map((item: any) => ({
             task_id: id,
@@ -204,12 +189,10 @@ export const taskController = {
     }
   },
 
-  // Delete a task
   deleteTask: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
 
-      // Check if task exists
       const { data: existingTask, error: fetchError } = await supabase.from("tasks").select("*").eq("id", id).single()
 
       if (fetchError) {
@@ -219,14 +202,12 @@ export const taskController = {
         throw fetchError
       }
 
-      // If it's a checklist task, delete the items first
       if (existingTask.type === "checklist") {
         const { error: deleteItemsError } = await supabase.from("checklist_items").delete().eq("task_id", id)
 
         if (deleteItemsError) throw deleteItemsError
       }
 
-      // Delete the task
       const { error } = await supabase.from("tasks").delete().eq("id", id)
 
       if (error) throw error
@@ -237,12 +218,10 @@ export const taskController = {
     }
   },
 
-  // Toggle task completion
   toggleTaskCompletion: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params
 
-      // Check if task exists
       const { data: existingTask, error: fetchError } = await supabase.from("tasks").select("*").eq("id", id).single()
 
       if (fetchError) {
@@ -252,7 +231,6 @@ export const taskController = {
         throw fetchError
       }
 
-      // Toggle completion status
       const { data, error } = await supabase
         .from("tasks")
         .update({
@@ -264,7 +242,6 @@ export const taskController = {
 
       if (error) throw error
 
-      // If it's a checklist task, fetch the items
       if (data.type === "checklist") {
         const { data: items, error: itemsError } = await supabase.from("checklist_items").select("*").eq("task_id", id)
 
@@ -279,12 +256,10 @@ export const taskController = {
     }
   },
 
-  // Toggle subtask completion
   toggleSubtaskCompletion: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { taskId, subtaskId } = req.params
 
-      // Check if task exists
       const { data: existingTask, error: fetchError } = await supabase
         .from("tasks")
         .select("*")
@@ -298,7 +273,6 @@ export const taskController = {
         throw fetchError
       }
 
-      // Check if subtask exists
       const { data: existingSubtask, error: fetchSubtaskError } = await supabase
         .from("checklist_items")
         .select("*")
@@ -313,7 +287,6 @@ export const taskController = {
         throw fetchSubtaskError
       }
 
-      // Toggle subtask completion
       const { error } = await supabase
         .from("checklist_items")
         .update({
@@ -323,12 +296,10 @@ export const taskController = {
 
       if (error) throw error
 
-      // Fetch the updated task with all its items
       const { data: updatedTask, error: taskError } = await supabase.from("tasks").select("*").eq("id", taskId).single()
 
       if (taskError) throw taskError
 
-      // Fetch the updated items
       const { data: items, error: itemsError } = await supabase
         .from("checklist_items")
         .select("*")

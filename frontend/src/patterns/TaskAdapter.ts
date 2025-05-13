@@ -5,7 +5,7 @@ export class TaskAdapter {
 
   static async fetchTasks(): Promise<Task[]> {
     try {
-      const response = await fetch(`${this.API_URL}/api/tasks`)
+      const response = await fetch(`${this.API_URL}/api/tasks/tasks`)
 
       if (!response.ok) {
         throw new Error(`Error fetching tasks: ${response.statusText}`)
@@ -30,7 +30,7 @@ export class TaskAdapter {
         items: task.items,
       }
 
-      const response = await fetch(`${this.API_URL}/api/tasks`, {
+      const response = await fetch(`${this.API_URL}/api/tasks/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export class TaskAdapter {
         items: task.items,
       }
 
-      const response = await fetch(`${this.API_URL}/api/tasks/${task.id}`, {
+      const response = await fetch(`${this.API_URL}/api/tasks/tasks/${task.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export class TaskAdapter {
 
   static async deleteTask(id: string): Promise<boolean> {
     try {
-      const response = await fetch(`${this.API_URL}/api/tasks/${id}`, {
+      const response = await fetch(`${this.API_URL}/api/tasks/tasks/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +104,7 @@ export class TaskAdapter {
 
   static async toggleTaskCompletion(id: string): Promise<Task | null> {
     try {
-      const response = await fetch(`${this.API_URL}/api/tasks/${id}/toggle`, {
+      const response = await fetch(`${this.API_URL}/api/tasks/tasks/${id}/toggle`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +126,7 @@ export class TaskAdapter {
 
   static async toggleSubtaskCompletion(taskId: string, subtaskId: string): Promise<Task | null> {
     try {
-      const response = await fetch(`${this.API_URL}/api/tasks/${taskId}/subtasks/${subtaskId}/toggle`, {
+      const response = await fetch(`${this.API_URL}/api/tasks/tasks/${taskId}/subtasks/${subtaskId}/toggle`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
